@@ -65,7 +65,7 @@ export function DynamicDataTable() {
 
     const generated = Object.keys(data[0]).map((key) => ({
       accessorKey: key,
-      header: ({ column }) => (
+      header: ({ column }: any) => (
           <Button
               variant="ghost"
               className="px-0"
@@ -75,7 +75,7 @@ export function DynamicDataTable() {
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
       ),
-      cell: ({ row }) => <div>{row.getValue(key)}</div>,
+      cell: ({ row }: any) => <div>{row.getValue(key)}</div>,
     }))
 
     setColumns(generated)

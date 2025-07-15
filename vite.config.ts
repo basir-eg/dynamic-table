@@ -9,7 +9,7 @@ export default defineConfig({
     allowedHosts: ['pour-oz-significant-iraqi.trycloudflare.com']
   },
   plugins: [react(), tailwindcss()],
-  base: "/untitled",
+  base: "/dynamic-table",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
