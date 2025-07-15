@@ -35,16 +35,23 @@ export function DynamicDataTable() {
   const [error, setError] = React.useState<string | null>(null)
 
   React.useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const url = params.get("link")
+    const currentUrl = window.location.href;
 
-    if (!url) {
+    const prefix = "/dynamic-table/";
+    const index = currentUrl.indexOf(prefix);
+    let extractedLink = "";
+
+    if (index !== -1) {
+      extractedLink = currentUrl.slice(index + prefix.length);
+    }
+
+    if (!extractedLink) {
       setError("Missing 'url' query parameter.")
       setLoading(false)
       return
     }
 
-    fetch(url)
+    fetch(extractedLink)
         .then(res => {
           if (!res.ok) throw new Error("Failed to fetch data")
           return res.json()
@@ -59,7 +66,6 @@ export function DynamicDataTable() {
         })
   }, [])
 
-  // ✅ توليد الأعمدة بعد وصول الداتا
   React.useEffect(() => {
     if (data.length === 0) return
 
@@ -100,7 +106,6 @@ export function DynamicDataTable() {
     },
   })
 
-  // ✅ لو في خطأ
   if (error) {
     return (
         <div className="p-4 text-red-600 font-medium text-center">
