@@ -46,7 +46,7 @@ export function DynamicDataTable() {
     }
 
     if (!extractedLink) {
-      setError("Missing 'url' query parameter.")
+      setError("Missing 'link' query parameter Is required.")
       setLoading(false)
       return
     }
