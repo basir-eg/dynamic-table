@@ -38,7 +38,7 @@ export function DynamicDataTable() {
 
   React.useEffect(() => {
     const currentUrl = window.location.href
-    const prefix = "/dynamic-table/?link="
+    const prefix = "link="
     const index = currentUrl.indexOf(prefix)
     let extractedLink = ""
 
