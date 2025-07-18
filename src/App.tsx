@@ -18,6 +18,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableFooter,
 } from "@/components/ui/table"
 
 import { Button } from "@/components/ui/button"
@@ -26,6 +27,7 @@ import * as React from "react"
 
 export function DynamicDataTable() {
   const [data, setData] = React.useState<any[]>([])
+  const [footerData, setFooterData] = React.useState<Record<string, any[]>>({})
   const [columns, setColumns] = React.useState<ColumnDef<any>[]>([])
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -35,18 +37,17 @@ export function DynamicDataTable() {
   const [error, setError] = React.useState<string | null>(null)
 
   React.useEffect(() => {
-    const currentUrl = window.location.href;
-
-    const prefix = "/dynamic-table/?link=";
-    const index = currentUrl.indexOf(prefix);
-    let extractedLink = "";
+    const currentUrl = window.location.href
+    const prefix = "/dynamic-table/?link="
+    const index = currentUrl.indexOf(prefix)
+    let extractedLink = ""
 
     if (index !== -1) {
-      extractedLink = currentUrl.slice(index + prefix.length);
+      extractedLink = currentUrl.slice(index + prefix.length)
     }
 
     if (!extractedLink) {
-      setError("Missing 'link' query parameter Is required.")
+      setError("Missing 'link' query parameter is required.")
       setLoading(false)
       return
     }
@@ -57,7 +58,31 @@ export function DynamicDataTable() {
           return res.json()
         })
         .then(json => {
-          setData(json)
+          if (json.rows && Array.isArray(json.rows)) {
+            setData(json.rows)
+
+            if (json.footer && Array.isArray(json.footer)) {
+              const footerObj: Record<string, any[]> = {}
+
+              json.footer.forEach((item: any) => {
+                if (typeof item === 'object') {
+                  Object.keys(item).forEach(key => {
+                    if (item[key] !== null && item[key] !== undefined) {
+                      if (!footerObj[key]) {
+                        footerObj[key] = []
+                      }
+                      footerObj[key].push(item[key])
+                    }
+                  })
+                }
+              })
+
+              setFooterData(footerObj)
+            }
+          } else {
+            setData(json)
+            setFooterData({})
+          }
           setLoading(false)
         })
         .catch(err => {
@@ -82,10 +107,22 @@ export function DynamicDataTable() {
           </Button>
       ),
       cell: ({ row }: any) => <div>{row.getValue(key)}</div>,
+      footer: () => {
+        if (footerData[key] && footerData[key].length > 0) {
+          return (
+              <div className="font-bold text-left space-y-1">
+                {footerData[key].map((value, index) => (
+                    <div key={index}>{value}</div>
+                ))}
+              </div>
+          )
+        }
+        return null
+      },
     }))
 
     setColumns(generated)
-  }, [data])
+  }, [data, footerData])
 
   const table = useReactTable({
     data,
@@ -114,6 +151,8 @@ export function DynamicDataTable() {
     )
   }
 
+  const hasFooterData = Object.keys(footerData).length > 0
+
   return (
       <div className="w-full space-y-4">
         <div className="rounded-md border overflow-x-auto">
@@ -132,6 +171,7 @@ export function DynamicDataTable() {
                   </TableRow>
               ))}
             </TableHeader>
+
             <TableBody>
               {loading ? (
                   <TableRow>
@@ -160,6 +200,23 @@ export function DynamicDataTable() {
                   </TableRow>
               )}
             </TableBody>
+
+            {!loading && hasFooterData && (
+                <TableFooter>
+                  <TableRow className="bg-gray-50 hover:bg-gray-50">
+                    {table.getFooterGroups().map((footerGroup) =>
+                        footerGroup.headers.map((header) => (
+                            <TableCell key={header.id} className="font-bold">
+                              {header.isPlaceholder ? null : flexRender(
+                                  header.column.columnDef.footer,
+                                  header.getContext()
+                              )}
+                            </TableCell>
+                        ))
+                    )}
+                  </TableRow>
+                </TableFooter>
+            )}
           </Table>
         </div>
 

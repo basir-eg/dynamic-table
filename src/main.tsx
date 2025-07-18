@@ -6,7 +6,7 @@ import { DynamicDataTable} from "@/App.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <div className={"h-full w-full flex items-center justify-center"}>
+    <div className={"h-screen w-full flex p-4"}>
       <DynamicDataTable/>
     </div>
   </StrictMode>,
