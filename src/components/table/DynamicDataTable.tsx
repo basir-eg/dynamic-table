@@ -334,7 +334,7 @@ export function DynamicDataTable() {
                 {loading ? (
                     <TableLoader colSpan={columns.length || 1}/>
                 ) : table.getRowModel().rows.length ? (
-                    table.getRowModel().rows.map((row, index) => (
+                    table.getRowModel().rows.map((row) => (
                         <TableRow
                             key={row.id}
                             data-state={row.getIsSelected() && "selected"}
