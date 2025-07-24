@@ -206,7 +206,7 @@ export function DynamicDataTable() {
         {/* Header Section */}
         <div className="flex flex-col space-y-3">
           <div>
-            <h1 className="text-xl font-bold text-foreground">{headerMessage}</h1>
+            <h1 className="text-2xl font-bold text-foreground">{headerMessage}</h1>
             <p className="text-xs text-muted-foreground mt-0.5">
               {message}
             </p>
@@ -220,7 +220,7 @@ export function DynamicDataTable() {
 
         {/* Search and Controls */}
         {!loading && data.length > 0 && (
-            <div className="bg-card rounded-lg border p-4">
+            <div className="bg-card p-4">
               <div className="flex flex-col lg:flex-row gap-3 items-center justify-between">
                 <div className="flex items-center justify-between gap-3 flex-1">
                   {/* Professional Search Input */}
@@ -367,8 +367,8 @@ export function DynamicDataTable() {
         </div>
 
         {/* Pagination */}
-        {!loading && table.getRowModel().rows.length > 0 && (
-            <div className="bg-card rounded-lg border">
+        {!loading && table.getRowModel().rows.length > 10 && (
+            <div className="bg-card">
               <TablePagination table={table} />
             </div>
         )}

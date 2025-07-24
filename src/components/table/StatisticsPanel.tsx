@@ -22,7 +22,7 @@ export function StatisticsPanel({
                  </h3>
                </div>
                 <div className={"w-1/2" }>
-                  <p className="text-3xl font-bold text-foreground text-right">
+                  <p className="text-2xl font-bold text-foreground text-right">
                     {stat.value}
                   </p>
                 </div>
